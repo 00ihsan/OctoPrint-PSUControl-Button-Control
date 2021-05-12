@@ -2,7 +2,7 @@
 # This code is free to use.
 # Pull requests are appreciated.
 
-buttonPin = 37
+buttonPin = 26
 API_KEY = "___API_KEY___"
 Server = "localhost"
 
