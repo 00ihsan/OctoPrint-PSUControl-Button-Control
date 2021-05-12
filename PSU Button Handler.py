@@ -37,8 +37,8 @@ class CheckButton(Thread):
   def run(self):
     global button
     while True:
-      button.when_pressed = switch()
-
+      button.wait_for_press()
+      button.when_pressed = switch
 def switch():
   global state
   print("Button pressed")
