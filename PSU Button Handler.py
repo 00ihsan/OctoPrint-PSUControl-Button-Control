@@ -38,7 +38,6 @@ class CheckButton(Thread):
     global button
     while True:
       button.wait_for_press()
-      button.when_pressed = switch
 def switch():
   global state
   print("Button pressed")
@@ -54,6 +53,7 @@ try:
   button = Button(buttonPin)
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
+  button.when_pressed = switch
   print("Activating threads")
   ButtonThread.start()
   ApiThread.start()
