@@ -9,7 +9,7 @@ Server = "localhost"
 from json.decoder import JSONDecodeError
 from requests import api
 from requests.models import Response
-from gpiozero import Button as GPIO 
+from gpiozero import Button 
 import time
 import requests
 import os
