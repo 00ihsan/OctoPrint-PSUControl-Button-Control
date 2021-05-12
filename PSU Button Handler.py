@@ -38,7 +38,7 @@ class CheckButton(Thread):
     global pi
     global state
     while True:
-      if pi.read(buttonPin):
+      if pi.read(buttonPin) == 1:
         print("Button pressed")
         if (state == True):
           os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
@@ -49,6 +49,8 @@ try:
   state = False
   event = threading.Event()
   pi = pigpio.pi()
+  pi.set_mode(buttonPin, pigpio.INPUT)
+  pi.set_pull_up_down(buttonPin, pigpio.PUD_DOWN)
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
   print("Activating threads")
