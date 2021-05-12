@@ -9,7 +9,7 @@ Server = "localhost"
 from json.decoder import JSONDecodeError
 from requests import api
 from requests.models import Response
-from gpiozero import Button
+import gpiozero import Button
 import time
 import requests
 import os
@@ -32,22 +32,26 @@ class CheckAPI(Thread):
       print("Connection error")
     finally:
       exit
-
-def switch():
-  global state
-  print("Button pressed")
-  if (state == True):
-    os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
-  else:
-    os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+  
+class CheckButton(Thread):
+  def run(self):
+    while True:
+      global button
+      button.wait_for_press()
+      print("Button pressed")
+      if (state == True):
+        os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+      else:
+        os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
 
 try:
   state = False
   event = threading.Event()
+  ButtonThread = CheckButton()
   ApiThread = CheckAPI()
   button = Button(buttonPin)
-  button.when_pressed = switch
-  print("Activating thread")
+  print("Activating threads")
+  ButtonThread.start()
   ApiThread.start()
 
 except KeyboardInterrupt:
