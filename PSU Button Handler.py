@@ -57,7 +57,6 @@ try:
   print("Activating threads")
   ButtonThread.start()
   ApiThread.start()
-  print(GPIO.input(buttonPin))
 
 except KeyboardInterrupt:
   print("\nEXIT")
