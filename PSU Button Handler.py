@@ -38,7 +38,7 @@ class CheckButton(Thread):
     while True:
       pinstate = GPIO.input(buttonPin)
       print(pinstate)
-      if pinstate == 0:
+      if pinstate == 1:
         print("Button pressed")
         if (state == True):
           os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
@@ -54,7 +54,7 @@ try:
 
   buttonPin = 37
   GPIO.setmode(GPIO.BOARD)
-  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
   Button = CheckButton()
   Api = CheckAPI()
   print("Activating threads")
