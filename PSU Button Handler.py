@@ -34,8 +34,8 @@ class CheckButton(Thread):
     global state
     global buttonPin
     while True:
-      while (GPIO.input(buttonPin == 0)):
-        if (GPIO.input(buttonPin) == 1):
+      while (GPIO.input(buttonPin)):
+        if (GPIO.input(buttonPin) != 1):
           print("Button pressed")
           if (state == True):
             os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
