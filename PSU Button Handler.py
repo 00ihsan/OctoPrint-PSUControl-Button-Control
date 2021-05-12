@@ -2,6 +2,10 @@
 # This code is free to use.
 # Pull requests are appreciated.
 
+buttonPin = 37
+API_KEY = "___API_KEY___"
+Server = "localhost"
+
 from json.decoder import JSONDecodeError
 from requests import api
 from requests.models import Response
@@ -43,12 +47,9 @@ def switch():
     os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
 
 try:
-  API_KEY = "___API_KEY___"
-  Server = "localhost"
   state = False
   event = threading.Event()
 
-  buttonPin = 37
   Button = Button(buttonPin)
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
