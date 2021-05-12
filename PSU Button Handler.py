@@ -2,6 +2,17 @@
 # This code is free to use.
 # Pull requests are appreciated.
 
+from json.decoder import JSONDecodeError
+from requests import api
+from requests.models import Response
+import RPi.GPIO as GPIO
+import time
+import requests
+import os
+import threading
+from threading import Thread
+import json
+
 class CheckAPI(Thread):
   def run(self):
     try:
@@ -33,17 +44,6 @@ class CheckButton(Thread):
       
 
 try:
-  from json.decoder import JSONDecodeError
-  from requests import api
-  from requests.models import Response
-  import RPi.GPIO as GPIO
-  import time
-  import requests
-  import os
-  import threading
-  from threading import Thread
-  import json
-
   API_KEY = "___API_KEY___"
   Server = "localhost"
   state = False
