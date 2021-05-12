@@ -9,7 +9,7 @@ Server = "localhost"
 from json.decoder import JSONDecodeError
 from requests import api
 from requests.models import Response
-from gpiozero import Button 
+import pigpio
 import time
 import requests
 import os
@@ -35,25 +35,22 @@ class CheckAPI(Thread):
   
 class CheckButton(Thread):
   def run(self):
-    global button
+    global pi
+    global state
     while True:
-      button.wait_for_press()
-def switch():
-  global state
-  print("Button pressed")
-  if (state == True):
-    os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
-  else:
-    os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+      if pi.read(buttonPin):
+        print("Button pressed")
+        if (state == True):
+          os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+        else:
+          os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
 
 try:
   state = False
   event = threading.Event()
-
-  button = Button(buttonPin)
+  pi = pigpio.pi()
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
-  button.when_pressed = switch
   print("Activating threads")
   ButtonThread.start()
   ApiThread.start()
