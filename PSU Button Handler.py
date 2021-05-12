@@ -9,7 +9,7 @@ Server = "localhost"
 from json.decoder import JSONDecodeError
 from requests import api
 from requests.models import Response
-from gpiozero import button as GPIO 
+from gpiozero import Button as GPIO 
 import time
 import requests
 import os
@@ -35,11 +35,12 @@ class CheckAPI(Thread):
   
 class CheckButton(Thread):
   def run(self):
-    global Button
+    global button
     while True:
-      Button.when_pressed = switch()
+      button.when_pressed = switch()
 
 def switch():
+  global state
   print("Button pressed")
   if (state == True):
     os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
@@ -50,7 +51,7 @@ try:
   state = False
   event = threading.Event()
 
-  Button = Button(buttonPin)
+  button = Button(buttonPin)
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
   print("Activating threads")
