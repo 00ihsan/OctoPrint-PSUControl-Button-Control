@@ -48,11 +48,12 @@ try:
             else:
               os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
       
+
+  buttonPin = 37
+  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+  GPIO.setmode(GPIO.BCM)
   Button = CheckButton()
   Api = CheckAPI()
-  buttonPin = 37
-  GPIO.setmode(GPIO.BCM)
-  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
   Button.start()
   Api.start()
 
