@@ -33,13 +33,15 @@ class CheckButton(Thread):
   def run(self):
     global state
     global buttonPin
+    global GPIO
+    global os
     while True:
-      if (GPIO.read(buttonPin) == 0):
-        print("Button pressed")
-        if (state == True):
-          os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
-        else:
-          os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+      if (GPIO.input(buttonPin)):
+          print("Button pressed")
+          if (state == True):
+            os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+          else:
+            os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
       
 
 try:
@@ -56,6 +58,7 @@ try:
   print("Activating threads")
   Button.start()
   Api.start()
+  print(GPIO.input(buttonPin))
 
 except KeyboardInterrupt:
   print("\nEXIT")
