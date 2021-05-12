@@ -50,8 +50,8 @@ try:
       
 
   buttonPin = 37
-  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
   GPIO.setmode(GPIO.BCM)
+  GPIO.setup(buttonPin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
   Button = CheckButton()
   Api = CheckAPI()
   Button.start()
