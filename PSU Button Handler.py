@@ -37,13 +37,12 @@ class CheckButton(Thread):
     while True:
       if GPIO.input(buttonPin):
         print("Button pressed")
-        contenttype = "Content-Type: application/json"
         request_on = json.dumps({"command":"turnPSUn"})
         request_off = json.dumps({"command":"turnPSUOff"})
         if (state == True):
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key:"+ API_KEY: contenttype},)
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
         else:
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key:"+ API_KEY: contenttype},)
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
 
 try:
   GPIO.setmode(gpio.BCM)
