@@ -41,12 +41,12 @@ class CheckButton(Thread):
         request_on = json.dumps({"command":"turnPSUn"})
         request_off = json.dumps({"command":"turnPSUOff"})
         if (state == True):
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key:"+ API_KEY, contenttype},)
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key:"+ API_KEY: contenttype},)
         else:
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key:"+ API_KEY, contenttype},)
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key:"+ API_KEY: contenttype},)
 
 try:
-  GPIO.setmode(BCM)
+  GPIO.setmode(gpio.BCM)
   GPIO.setup(buttonPin, GPIO.IN)
   state = False
   event = threading.Event()
