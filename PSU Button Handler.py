@@ -4,15 +4,11 @@
 
 buttonPin = 26
 API_KEY = "___API_KEY___"
-Server = "localhost"
+Server = ""
 
-from json.decoder import JSONDecodeError
-from requests import api
-from requests.models import Response
-from gpiozero import Button
+import RPi.GPIO as GPIO
 import time
 import requests
-import os
 import threading
 from threading import Thread
 import json
@@ -25,31 +21,37 @@ class CheckAPI(Thread):
         response = requests.get("http://" + Server + "/api/plugin/psucontrol", headers={'X-Api-Key':str(API_KEY)})
         JSONData = response.json()
         state = JSONData['isPSUOn']
-        event.wait(3)
+        event.wait(2)
     except ConnectionRefusedError:
       print("Connection refused")
     except ConnectionError:
       print("Connection error")
+    except KeyError:
+      print("KeyError: Is the API Key correct?")
     finally:
+      GPIO.cleanup()
       exit
   
 class CheckButton(Thread):
   def run(self):
     while True:
-      global button
-      button.wait_for_press()
-      print("Button pressed")
-      if (state == True):
-        os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOff\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
-      else:
-        os.system("curl -s -H \"Content-Type: application/json\" -H \"X-Api-Key:"+ API_KEY +"\" -X POST -d '{ \"command\":\"turnPSUOn\" }\' -u username:password http://" + Server + "/api/plugin/psucontrol")
+      if GPIO.input(buttonPin):
+        print("Button pressed")
+        contenttype = "Content-Type: application/json"
+        request_on = json.dumps({"command":"turnPSUn"})
+        request_off = json.dumps({"command":"turnPSUOff"})
+        if (state == True):
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key:"+ API_KEY, contenttype},)
+        else:
+          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key:"+ API_KEY, contenttype},)
 
 try:
+  GPIO.setmode(BCM)
+  GPIO.setup(buttonPin, GPIO.IN)
   state = False
   event = threading.Event()
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
-  button = Button(buttonPin)
   print("Activating threads")
   ButtonThread.start()
   ApiThread.start()
@@ -57,4 +59,5 @@ try:
 except KeyboardInterrupt:
   print("\nEXIT")
 finally:
+  GPIO.cleanup()
   exit
