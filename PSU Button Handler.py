@@ -28,22 +28,14 @@ class CheckAPI(Thread):
       print("Connection error")
     except KeyError:
       print("KeyError: Is the API Key correct?")
-    finally:
-      exit
 
 def checkbtn():
-  try:
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-    inputbtn = GPIO.input(buttonPin)
-    print(inputbtn)
-    if inputbtn == 1:
-      return 1
-    else:
-      return 0
-  finally:
-    GPIO.cleanup()
-    exit()
+  inputbtn = GPIO.input(buttonPin)
+  print(inputbtn)
+  if inputbtn == 1:
+    return 1
+  else:
+    return 0
 
 class CheckButton(Thread):
   def run(self):
@@ -59,6 +51,8 @@ class CheckButton(Thread):
 
 try:
   state = False
+  GPIO.setmode(GPIO.BCM)
+  GPIO.setup(buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
   event = threading.Event()
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
@@ -69,5 +63,3 @@ try:
 
 except KeyboardInterrupt:
   print("\nEXIT")
-finally:
-  exit
