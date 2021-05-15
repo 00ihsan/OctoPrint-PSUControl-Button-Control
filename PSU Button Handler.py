@@ -1,6 +1,7 @@
 # (C) Ihsan Topcu - Ihsansoft - 2021
 # This code is free to use.
 # Pull requests are appreciated.
+# Version 1.0
 
 buttonPin = 17
 API_KEY = "___API_KEY___"
