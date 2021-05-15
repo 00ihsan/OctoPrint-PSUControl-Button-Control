@@ -2,7 +2,7 @@
 # This code is free to use.
 # Pull requests are appreciated.
 
-buttonPin = 11
+buttonPin = 17
 API_KEY = "___API_KEY___"
 Server = "localhost"
 
@@ -32,12 +32,18 @@ class CheckAPI(Thread):
       exit
 
 def checkbtn():
-  inputbtn = GPIO.input(buttonPin)
-  print(inputbtn)
-  if inputbtn == 0 or input() == '2':
-    return 1
-  else:
-    return 0
+  try:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+    inputbtn = GPIO.input(buttonPin)
+    print(inputbtn)
+    if inputbtn == 1:
+      return 1
+    else:
+      return 0
+  finally:
+    GPIO.cleanup()
+    exit()
 
 class CheckButton(Thread):
   def run(self):
@@ -52,8 +58,6 @@ class CheckButton(Thread):
           requests.post("http://" + Server + "/api/plugin/psucontrol", data=request_on, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
 
 try:
-  GPIO.setmode(GPIO.BCM)
-  GPIO.setup(buttonPin, GPIO.IN)
   state = False
   event = threading.Event()
   ButtonThread = CheckButton()
