@@ -44,7 +44,7 @@ class CheckButton(Thread):
     while True:
       if checkbtn() == 1:
         print("Button pressed")
-        request_on = json.dumps({"command":"turnPSUn"})
+        request_on = json.dumps({"command":"turnPSUOn"})
         request_off = json.dumps({"command":"turnPSUOff"})
         if (state == True):
           requests.post("http://" + Server + "/api/plugin/psucontrol", data=request_off, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
@@ -59,8 +59,9 @@ try:
   ButtonThread = CheckButton()
   ApiThread = CheckAPI()
   print("Activating threads")
-  ButtonThread.start()
   ApiThread.start()
+  ButtonThread.start()
+
 
 except KeyboardInterrupt:
   print("\nEXIT")
