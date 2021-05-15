@@ -32,7 +32,9 @@ class CheckAPI(Thread):
       exit
 
 def checkbtn():
-  if GPIO.input(buttonPin) or input() == 1:
+  inputbtn = GPIO.input(buttonPin)
+  print(inputbtn)
+  if inputbtn == 0 or input() == '2':
     return 1
   else:
     return 0
@@ -45,9 +47,9 @@ class CheckButton(Thread):
         request_on = json.dumps({"command":"turnPSUn"})
         request_off = json.dumps({"command":"turnPSUOff"})
         if (state == True):
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
+          requests.post("http://" + Server + "/api/plugin/psucontrol", data=request_off, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
         else:
-          requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
+          requests.post("http://" + Server + "/api/plugin/psucontrol", data=request_on, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
 
 try:
   GPIO.setmode(GPIO.BCM)
