@@ -13,22 +13,6 @@ import threading
 from threading import Thread
 import json
 
-try:
-  GPIO.setmode(GPIO.BCM)
-  GPIO.setup(buttonPin, GPIO.IN)
-  state = False
-  event = threading.Event()
-  ButtonThread = CheckButton()
-  ApiThread = CheckAPI()
-  print("Activating threads")
-  ButtonThread.start()
-  ApiThread.start()
-
-except KeyboardInterrupt:
-  print("\nEXIT")
-finally:
-  exit
-
 class CheckAPI(Thread):
   def run(self):
     try:
@@ -64,3 +48,19 @@ class CheckButton(Thread):
           requests.post("http://" + Server + "/api/plugin/psucontrol", request_off, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
         else:
           requests.post("http://" + Server + "/api/plugin/psucontrol", request_on, headers= {"X-Api-Key" : API_KEY, "Content-Type" : "application/json"})
+
+try:
+  GPIO.setmode(GPIO.BCM)
+  GPIO.setup(buttonPin, GPIO.IN)
+  state = False
+  event = threading.Event()
+  ButtonThread = CheckButton()
+  ApiThread = CheckAPI()
+  print("Activating threads")
+  ButtonThread.start()
+  ApiThread.start()
+
+except KeyboardInterrupt:
+  print("\nEXIT")
+finally:
+  exit
